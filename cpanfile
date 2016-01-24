@@ -1,1 +1,1 @@
-requires 'App::TimeTracker' => '2.022';
+requires 'App::TimeTracker' => '2.023';
