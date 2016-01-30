@@ -1,5 +1,9 @@
 Revision history for App-TimeTracker-Category
 
+1.001   2016-01-30T23:07:15
+    - add command "statistic"
+
+
 1.000   2016-01-24T21:25:04
     - first release
 

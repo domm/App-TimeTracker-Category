@@ -5,7 +5,7 @@ use 5.010;
 
 # ABSTRACT: use categories when tracking time with App::TimeTracker
 
-our $VERSION = "1.000";
+our $VERSION = "1.001";
 
 use Moose::Util::TypeConstraints;
 use Moose::Role;
