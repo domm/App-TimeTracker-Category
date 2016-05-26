@@ -5,7 +5,7 @@ use 5.010;
 
 # ABSTRACT: use categories when tracking time with App::TimeTracker
 
-our $VERSION = "1.001";
+our $VERSION = "1.002";
 
 use Moose::Util::TypeConstraints;
 use Moose::Role;
@@ -35,51 +35,53 @@ after '_load_attribs_continue' => \&munge_start_attribs;
 before [ 'cmd_start', 'cmd_continue', 'cmd_append' ] => sub {
     my $self = shift;
 
-    $self->add_tag($self->category);
+    $self->add_tag( $self->category );
 };
 
 sub cmd_statistic {
     my $self = shift;
 
-    my @files = $self->find_task_files( {
-            from     => $self->from,
+    my @files = $self->find_task_files(
+        {   from     => $self->from,
             to       => $self->to,
             projects => $self->fprojects,
             tags     => $self->ftags,
             parent   => $self->fparent,
-        } );
+        }
+    );
     my $cats = $self->config->{category}{categories};
 
-    my $total  = 0;
+    my $total = 0;
     my %stats;
 
     foreach my $file (@files) {
-        my $task    = App::TimeTracker::Data::Task->load( $file->stringify );
-        my $time    = $task->seconds // $task->_build_seconds;
+        my $task = App::TimeTracker::Data::Task->load( $file->stringify );
+        my $time = $task->seconds // $task->_build_seconds;
         $total += $time;
-        my %tags = map { $_=>1 } @{$task->tags};
+        my %tags = map { $_ => 1 } @{ $task->tags };
 
         my $got_cat = 0;
         foreach my $cat (@$cats) {
-            if ($tags{$cat}) {
+            if ( $tags{$cat} ) {
                 $stats{$cat}{abs} += $time;
-                $got_cat=1;
+                $got_cat = 1;
                 last;
             }
         }
-        $stats{_no_cat}{abs}+=$time unless $got_cat;
+        $stats{_no_cat}{abs} += $time unless $got_cat;
     }
 
-    while (my ($cat, $data) = each %stats) {
-        $data->{percent} = sprintf("%.1f", $data->{abs} / $total * 100 );
-        $data->{nice} =  $self->beautify_seconds($data->{abs});
+    while ( my ( $cat, $data ) = each %stats ) {
+        $data->{percent} = sprintf( "%.1f", $data->{abs} / $total * 100 );
+        $data->{nice} = $self->beautify_seconds( $data->{abs} );
     }
 
     $self->_say_current_report_interval;
-    printf("%39s\n", $self->beautify_seconds($total));
-    foreach my $cat (sort keys %stats) {
+    printf( "%39s\n", $self->beautify_seconds($total) );
+    foreach my $cat ( sort keys %stats ) {
         my $data = $stats{$cat};
-        printf("%6s%%  %- 20s% 10s\n",$data->{percent},$cat, $data->{nice});
+        printf( "%6s%%  %- 20s% 10s\n",
+            $data->{percent}, $cat, $data->{nice} );
     }
 }
 
