@@ -10,15 +10,14 @@ our $VERSION = "1.001";
 use Moose::Util::TypeConstraints;
 use Moose::Role;
 
-after '_load_attribs_start' => sub {
+sub munge_start_attribs {
     my ( $class, $meta, $config ) = @_;
-
     my $cfg = $config->{category};
     return unless $cfg && $cfg->{categories};
 
-    subtype 'ATT::Category'
-        => as enum($cfg->{categories})
-        => message {"$_ is not a valid category (as defined in the current config)"};
+    subtype 'ATT::Category' => as enum( $cfg->{categories} ) => message {
+        "$_ is not a valid category (as defined in the current config)"
+    };
 
     $meta->add_attribute(
         'category' => {
@@ -26,8 +25,12 @@ after '_load_attribs_start' => sub {
             is            => 'ro',
             required      => $cfg->{required},
             documentation => 'Category',
-        } );
-};
+        }
+    );
+}
+after '_load_attribs_start'    => \&munge_start_attribs;
+after '_load_attribs_append'   => \&munge_start_attribs;
+after '_load_attribs_continue' => \&munge_start_attribs;
 
 before [ 'cmd_start', 'cmd_continue', 'cmd_append' ] => sub {
     my $self = shift;
