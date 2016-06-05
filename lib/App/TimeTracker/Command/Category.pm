@@ -136,8 +136,7 @@ Print stats on time worked per category
       15.7%  support               01:12:06
 
 You can use the same options as in C<report> to define which tasks you
-want stats on (C<--from, --until, --this, --last, --ftag, --fproject,
-..)
+want stats on (C<--from, --until, --this, --last, --ftag, --fproject, ..>)
 
 =head1 CHANGES TO OTHER COMMANDS
 
