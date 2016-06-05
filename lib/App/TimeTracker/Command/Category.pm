@@ -35,7 +35,9 @@ after '_load_attribs_continue' => \&munge_start_attribs;
 before [ 'cmd_start', 'cmd_continue', 'cmd_append' ] => sub {
     my $self = shift;
 
-    $self->add_tag( $self->category );
+    if ( $self->category ) {
+        $self->add_tag( $self->category );
+    }
 };
 
 sub cmd_statistic {
