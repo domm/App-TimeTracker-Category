@@ -31,7 +31,8 @@ A list (ARRAYREF) of category names.
 
 ### prefix
 
-If set, add this prefix to the category when storing it as tag. Useful to discern regular tags from category pseudo tags.
+If set, add this prefix to the category when storing it as tag. Useful
+to discern regular tags from category pseudo tags.
 
 # NEW COMMANDS
 
