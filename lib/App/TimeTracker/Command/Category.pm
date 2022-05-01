@@ -68,7 +68,7 @@ sub cmd_statistic {
 
         my $got_cat = 0;
         foreach my $cat (@$cats) {
-            if ( $tags{$prefix.$cat} || $tags{$cat} ) {
+            if ( (defined $prefix && $tags{$prefix.$cat}) || $tags{$cat} ) {
                 $stats{$cat}{abs} += $time;
                 $got_cat = 1;
                 last;
